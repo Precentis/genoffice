@@ -1,3 +1,4 @@
+import { BrandMark, brandName } from '../host-options'
 import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import type { Lang } from '@genoffice/i18n'
@@ -172,7 +173,6 @@ import type { CommentsMode } from './comments-mode'
 import { WRAP_OPTIONS } from './ContextMenu'
 import { CropDialog, CutoutDialog } from './PictureDialogs'
 import {
-  GensparkMark,
   IconAlignCenter,
   IconAlignJustify,
   IconAlignLeft,
@@ -3357,9 +3357,9 @@ function RibbonInner({
                   onClick={onToggleAi}
                 >
                   <span className="rb-big-icon">
-                    <GensparkMark size={26} />
+                    <BrandMark size={26} />
                   </span>
-                  <span>Genspark AI</span>
+                  <span>{brandName('Genspark')} AI</span>
                 </button>
                 <button
                   className="rb-big ai-entry"
@@ -3484,7 +3484,7 @@ function RibbonInner({
                   <span>{t('aiMindMapBtn')}</span>
                 </button>
               </div>
-              <div className="ribbon-group-label">Genspark AI</div>
+              <div className="ribbon-group-label">{brandName('Genspark')} AI</div>
             </div>
 
             <div className="ribbon-sep" />

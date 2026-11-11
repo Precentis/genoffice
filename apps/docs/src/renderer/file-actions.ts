@@ -5,6 +5,7 @@
  * fresh per call (wrapped in useCallback with the original dependency lists)
  * so state never goes stale.
  */
+import { hostOptions } from './host-options'
 import type { Editor } from '@tiptap/core'
 import { history } from '@tiptap/pm/history'
 import { suggestFileName } from '@genoffice/ui'
@@ -612,7 +613,7 @@ export async function loadFile(
     ctx.setThemeColors(parsed.themeColors ?? null)
     ctx.setThemeColorsDirty(false)
     ctx.setCommentComposing(false)
-    ctx.setTrackChanges(parsed.trackRevisions ?? false)
+    ctx.setTrackChanges(parsed.trackRevisions ?? hostOptions().trackChangesByDefault ?? false)
     ctx.setTrackRevisionsDirty(false)
     ctx.setProtection(parsed.protection)
     ctx.setProtectionDirty(false)
