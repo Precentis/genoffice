@@ -3,6 +3,7 @@ import type { Node as ProseMirrorNode } from '@tiptap/pm/model'
 import type { Transaction } from '@tiptap/pm/state'
 import { TABLE_TRAILING_SKIP } from '../editor/extensions'
 import { TRACK_IGNORE } from '../editor/revisions'
+import { withProductName } from '../host-options'
 import { blockRangePositions, HTML_RULES, parseHtmlFragment, type NumIds } from './protocol'
 
 /**
@@ -66,7 +67,7 @@ export function buildDocWriterRequest(
     ? `\n\n## The user's request\n${spec.instruction.slice(0, 2000)}`
     : ''
   return {
-    system: WRITER_SYSTEM + langDirective,
+    system: withProductName(WRITER_SYSTEM) + langDirective,
     user: `## Plan\n${spec.title ? `Title: ${spec.title}\n` : ''}${spec.plan.slice(0, 6000)}${context}${instruction}\n\nWrite the content now.`,
   }
 }

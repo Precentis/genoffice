@@ -1,4 +1,5 @@
 import { placeholderInstruction } from './redact'
+import { withProductName } from '../host-options'
 import { redactLabelsOf } from './redact-view'
 import type { Editor } from '@tiptap/core'
 import type { AgentSkill } from '@genoffice/agent-core'
@@ -77,7 +78,7 @@ export function createDocsSkill(
         ? redactLabelsOf(editor.getJSON() as unknown as Parameters<typeof redactLabelsOf>[0])
         : []
       const redact = labels.length > 0 ? `\n\n${placeholderInstruction(labels)}` : ''
-      return AGENT_SYSTEM_PROMPT + mediaOffNote() + redact
+      return withProductName(AGENT_SYSTEM_PROMPT) + mediaOffNote() + redact
     },
     get tools() {
       const hidden = mediaToolsOff()

@@ -28,6 +28,12 @@ export function brandName(fallback: string): string {
   return hostOptions().brandName ?? fallback
 }
 
+/** a model prompt with the host's product name in place of the editor's own, so the AI never names another product */
+export function withProductName(prompt: string): string {
+  const name = hostOptions().brandName
+  return name ? prompt.replaceAll('GenOffice Docs', name) : prompt
+}
+
 export function BrandMark({ size }: { size: number }) {
   const mark = hostOptions().brandMark
   return mark ? <>{mark({ size })}</> : <GensparkMark size={size} />
