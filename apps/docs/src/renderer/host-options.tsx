@@ -21,7 +21,7 @@ export interface HostOptions {
 /** what a host skill may read: the open document's editor */
 export interface HostSkillContext {
   getEditor: () => Editor
-  /** run one of the editor's own tools (e.g. apply_ops), tracked when Track Changes is on */
+  /** run one of the editor's own tools (e.g. apply_ops); its changes are always tracked */
   runEditorTool: (name: string, input: Record<string, unknown>) => Promise<ToolExecution>
 }
 

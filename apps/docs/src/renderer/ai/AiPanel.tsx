@@ -847,8 +847,16 @@ export function AiPanel({
           getEditor: () => editorRef.current,
           // one of the editor's own tools, with the panel's Track Changes setting (the host's suggestions land as
           // tracked changes exactly like the AI's)
-          runEditorTool: async (name, input) =>
-            docsSkill.executeTool({ id: `host-${Date.now()}`, name, input }),
+          runEditorTool: async (name, input) => {
+            // always tracked, whatever the panel's toggle: the lawyer accepts or rejects the host's suggestions
+            const was = trackChangesRef.current
+            trackChangesRef.current = true
+            try {
+              return await docsSkill.executeTool({ id: `host-${Date.now()}`, name, input })
+            } finally {
+              trackChangesRef.current = was
+            }
+          },
         }) ?? []),
       ]),
       captureSnapshot: () => editorRef.current.getJSON() as PmNode,
