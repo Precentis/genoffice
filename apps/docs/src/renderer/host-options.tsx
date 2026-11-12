@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react'
+import type { Editor } from '@tiptap/core'
+import type { AgentSkill } from '@genoffice/agent-core'
 import { GensparkMark } from './components/icons'
 
 /**
@@ -12,6 +14,13 @@ export interface HostOptions {
   brandMark?: (props: { size: number }) => ReactNode
   /** start with Track Changes on when the opened document does not say (w:trackRevisions) */
   trackChangesByDefault?: boolean
+  /** the host's own agent skills (tools that call the host's services), added beside the editor's */
+  skills?: (context: HostSkillContext) => AgentSkill[]
+}
+
+/** what a host skill may read: the open document's editor */
+export interface HostSkillContext {
+  getEditor: () => Editor
 }
 
 declare global {

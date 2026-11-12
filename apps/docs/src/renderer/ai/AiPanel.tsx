@@ -89,7 +89,7 @@ import { createElectronTransport } from './transport'
 import { useI18n, t as tModule, aiLangDirective, type StringKey } from '../i18n/locale'
 import { createFileNav, Markdown } from '@genoffice/ui'
 import { AiComposer, AiScopeQuote, AiTypingIndicator, type AiScopeQuoteData } from '@genoffice/ui'
-import { BrandMark, brandName } from '../host-options'
+import { BrandMark, brandName, hostOptions } from '../host-options'
 import sendEnterOn from '../assets/send-enter-on.png'
 import sendEnterOff from '../assets/send-enter-off.png'
 import sendStop from '../assets/send-stop.png'
@@ -842,6 +842,7 @@ export function AiPanel({
         ),
         createFilesSkill(availableAttachments),
         createSkillsSkill(),
+        ...(hostOptions().skills?.({ getEditor: () => editorRef.current }) ?? []),
       ]),
       captureSnapshot: () => editorRef.current.getJSON() as PmNode,
       events: {
