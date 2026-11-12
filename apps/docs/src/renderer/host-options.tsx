@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import type { Editor } from '@tiptap/core'
-import type { AgentSkill } from '@genoffice/agent-core'
+import type { AgentSkill, ToolExecution } from '@genoffice/agent-core'
 import { GensparkMark } from './components/icons'
 
 /**
@@ -21,6 +21,8 @@ export interface HostOptions {
 /** what a host skill may read: the open document's editor */
 export interface HostSkillContext {
   getEditor: () => Editor
+  /** run one of the editor's own tools (e.g. apply_ops), tracked when Track Changes is on */
+  runEditorTool: (name: string, input: Record<string, unknown>) => Promise<ToolExecution>
 }
 
 declare global {

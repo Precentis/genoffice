@@ -808,6 +808,21 @@ export function AiPanel({
       bullet: findNumId(blocksRef.current, 'bullet') ?? numIdFallbackRef.current?.bullet ?? null,
       ordered: findNumId(blocksRef.current, 'ordered') ?? numIdFallbackRef.current?.ordered ?? null,
     })
+    const docsSkill = createDocsSkill(
+      () => editorRef.current,
+      numIds,
+      () => (trackChangesRef.current ? { author: aiRevisionAuthor() } : undefined),
+      () => commentsAccessRef.current,
+      () => hfAccessRef.current,
+      () => imageGenerationAvailable(settingsRef.current, gskLoggedInRef.current),
+      () => ({
+        write: (spec, onProgress, signal) => runDocWriterRef.current(spec, onProgress, signal),
+      }),
+      () => pageSetupAccessRef.current,
+      () => docExtrasRef.current,
+      () => notesAccessRef.current,
+      () => mediaAnalysisAvailable(settingsRef.current, gskLoggedInRef.current),
+    )
     loopRef.current = new AgentLoop<PmNode>({
       transport: transportRef.current,
       systemSuffix: aiLangDirective,
@@ -825,24 +840,16 @@ export function AiPanel({
               }),
             ]
           : []),
-        createDocsSkill(
-          () => editorRef.current,
-          numIds,
-          () => (trackChangesRef.current ? { author: aiRevisionAuthor() } : undefined),
-          () => commentsAccessRef.current,
-          () => hfAccessRef.current,
-          () => imageGenerationAvailable(settingsRef.current, gskLoggedInRef.current),
-          () => ({
-            write: (spec, onProgress, signal) => runDocWriterRef.current(spec, onProgress, signal),
-          }),
-          () => pageSetupAccessRef.current,
-          () => docExtrasRef.current,
-          () => notesAccessRef.current,
-          () => mediaAnalysisAvailable(settingsRef.current, gskLoggedInRef.current),
-        ),
+        docsSkill,
         createFilesSkill(availableAttachments),
         createSkillsSkill(),
-        ...(hostOptions().skills?.({ getEditor: () => editorRef.current }) ?? []),
+        ...(hostOptions().skills?.({
+          getEditor: () => editorRef.current,
+          // one of the editor's own tools, with the panel's Track Changes setting (the host's suggestions land as
+          // tracked changes exactly like the AI's)
+          runEditorTool: async (name, input) =>
+            docsSkill.executeTool({ id: `host-${Date.now()}`, name, input }),
+        }) ?? []),
       ]),
       captureSnapshot: () => editorRef.current.getJSON() as PmNode,
       events: {
